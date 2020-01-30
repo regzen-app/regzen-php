@@ -12,7 +12,7 @@ class RegzenClient
     const REGZEN_SECRET_ENV_KEY = 'REGZEN_APPLICATION_SECRET';
 
     const BASE_URL = 'https://api.regzen.com/api/';
-    const EXCHANGE_ENDPOINT_URL = 'oauth/exchange?authorization_code=';
+    const EXCHANGE_ENDPOINT_URL = 'oauth/exchange';
 
     public function __construct($applicationSecret)
     {
@@ -29,7 +29,7 @@ class RegzenClient
     public function exchangeAuthorizationCode($authorizationCode)
     {
         try {
-            $response = $this->httpClient->get(self::EXCHANGE_ENDPOINT_URL . $authorizationCode);
+            $response = $this->httpClient->post(self::EXCHANGE_ENDPOINT_URL, [ 'authorization_code' => $authorizationCode ]);
         } catch (Exception $exception) {
             throw new RegzenUnauthorizedException;
         }
