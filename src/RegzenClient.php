@@ -23,7 +23,7 @@ class RegzenClient
         }
 
         $this->applicationSecret = $applicationSecret;
-        $this->httpClient = new Client([ 'base_uri' => self::BASE_URL ]);
+        $this->httpClient = new Client(['base_uri' => self::BASE_URL]);
     }
 
     public function exchangeAuthorizationCode($authorizationCode)
@@ -52,22 +52,33 @@ class RegzenClient
         ];
     }
 
+    public function decryptPayload($encryptedPayload)
+    {
+        if (!$stringifiedData = $this->decrypt($encryptedPayload)) {
+            throw new RegzenUnauthorizedException;
+        }
+
+        return (object) [
+            'data' => json_decode($stringifiedData),
+        ];
+    }
+
     private function decrypt($data)
     {
         $c = base64_decode($data);
-        $ivLength = openssl_cipher_iv_length($cipher=self::CIPHER);
+        $ivLength = openssl_cipher_iv_length($cipher = self::CIPHER);
         $iv = substr($c, 0, $ivLength);
-        $hmac = substr($c, $ivLength, $sha2len=32);
+        $hmac = substr($c, $ivLength, $sha2len = 32);
         $cipherText = substr($c, $ivLength + $sha2len);
         $plainText = openssl_decrypt(
             $cipherText,
             $cipher,
             $this->applicationSecret,
-            $options=OPENSSL_RAW_DATA,
+            $options = OPENSSL_RAW_DATA,
             $iv
         );
 
-        $calcmac = hash_hmac('sha256', $cipherText, $this->applicationSecret, $as_binary=true);
+        $calcmac = hash_hmac('sha256', $cipherText, $this->applicationSecret, $as_binary = true);
 
         if (!hash_equals($hmac, $calcmac)) {
             return false;
