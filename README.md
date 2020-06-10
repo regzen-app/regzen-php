@@ -35,3 +35,16 @@ You can later acces the user data like this:
     $email = $response->data->email;
 
 If the exchange fails, a `\Regzen\RegzenUnauthorizedException` will be thrown which you can catch and show the user appropriate feedback.
+
+### Decrypting data
+
+When communicating with the Regzen API, you'll need to decrypt received data before any further use.
+Decrypt payload by calling `decryptPayload` on the client:
+
+    $payload = $this->regzen->decryptPayload($encryptedPayload);
+
+You can later acces the payload data like this:
+
+    $fieldName = $response->data->field_name;
+
+If the decryption fails, a `\Regzen\RegzenUnauthorizedException` will be thrown which you can catch and show the user appropriate feedback.
