@@ -45,6 +45,6 @@ Decrypt payload by calling `decryptPayload` on the client:
 
 You can later acces the payload data like this:
 
-    $fieldName = $response->data->field_name;
+    $fieldName = $payload->data->field_name;
 
 If the decryption fails, a `\Regzen\RegzenUnauthorizedException` will be thrown which you can catch and show the user appropriate feedback.
