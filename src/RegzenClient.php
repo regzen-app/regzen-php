@@ -11,10 +11,9 @@ class RegzenClient
 
     const REGZEN_SECRET_ENV_KEY = 'REGZEN_APPLICATION_SECRET';
 
-    const BASE_URL = 'https://api.regzen.com/api/';
     const EXCHANGE_ENDPOINT_URL = 'oauth/exchange';
 
-    public function __construct($applicationSecret)
+    public function __construct($applicationSecret, $apiBaseUrl = 'https://api.regzen.com/api/')
     {
         if (!$applicationSecret) {
             throw new RegzenApplicationSecretNotFoundException(
@@ -23,7 +22,7 @@ class RegzenClient
         }
 
         $this->applicationSecret = $applicationSecret;
-        $this->httpClient = new Client(['base_uri' => self::BASE_URL]);
+        $this->httpClient = new Client(['base_uri' => $apiBaseUrl]);
     }
 
     public function exchangeAuthorizationCode($authorizationCode)
